@@ -255,6 +255,10 @@ function runGame() {
     }
   });
 
+  // A read handle for automated play-tests (and curious players): the live
+  // world state, nothing more. The game never reads it back.
+  window.__shadowlantern = { world };
+
   announce('SHADOWLANTERN. Steal the Moonstone, reach the exit unseen. Press Space or click to start.');
   requestAnimationFrame(frame);
 }
