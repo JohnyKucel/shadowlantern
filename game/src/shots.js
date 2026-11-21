@@ -47,9 +47,12 @@ function autopilotStep(state) {
   if (threat) {
     const lit = lightAt(thief.x, thief.y, state.lanterns);
     if (lit > 0.25) {
-      // Caught in the light: back away from the guard until the cone lets go.
-      const away = directionTo(state, thief.x * 2 - threat.x, thief.y * 2 - threat.y);
-      return { mx: away.mx, my: away.my, sneak: true };
+      // Caught in the light: fall back along the route to the last safe
+      // waypoint and wait there — never blunder deeper into the manor.
+      const back = route[Math.max(0, waypointIndex - 1)];
+      const retreat = directionTo(state, back[0], back[1]);
+      if (retreat.dist < WAYPOINT_REACH) return { mx: 0, my: 0, sneak: true };
+      return { mx: retreat.mx, my: retreat.my, sneak: true };
     }
     // In shadow the meter fills slower than it drains once the guard looks
     // away, so freezing and waiting the patrol out is the right move.

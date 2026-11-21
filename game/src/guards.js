@@ -96,7 +96,7 @@ function moveToward(guard, targetX, targetY, speed, dt, collide) {
   guard.x += stepX;
   guard.y += stepY;
   guard.angle = angleTo(guard.x - stepX, guard.y - stepY, guard.x, guard.y);
-  collide(guard);
+  collide(guard, 13);
   return Math.hypot(targetX - guard.x, targetY - guard.y) < 6;
 }
 
@@ -144,6 +144,7 @@ export function stepGuard(guard, dt, world, events) {
     guard.lostSight = 0;
     if (before < DETECTION.suspiciousAt && guard.meter >= DETECTION.suspiciousAt) {
       events.spotted = true;
+      if (guard.state === GUARD_CALM) guard.state = GUARD_SUSPICIOUS;
     }
     if (guard.meter >= DETECTION.alertedAt && guard.state !== GUARD_ALERTED) {
       guard.state = GUARD_ALERTED;
