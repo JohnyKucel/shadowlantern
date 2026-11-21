@@ -1,0 +1,22 @@
+// A small seeded generator (mulberry32) so the same seed always deals the same
+// manor: dust motes, lantern flicker and patrol jitter never use Math.random().
+export function createRandom(seed) {
+  let state = seed >>> 0;
+  return function random() {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let value = state;
+    value = Math.imul(value ^ (value >>> 15), value | 1);
+    value ^= value + Math.imul(value ^ (value >>> 7), value | 61);
+    return ((value ^ (value >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// Pick a stable integer seed from a string (used for the shot scenes).
+export function seedFromString(text) {
+  let hash = 2166136261;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
